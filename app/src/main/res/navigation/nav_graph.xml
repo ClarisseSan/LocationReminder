@@ -38,7 +38,5 @@
     <activity
         android:id="@+id/authenticationActivity"
         android:name="com.udacity.project4.authentication.AuthenticationActivity"
-        android:label="Login"
-        tools:layout="@layout/activity_authentication" />
-
+        android:label="Login" />
 </navigation>

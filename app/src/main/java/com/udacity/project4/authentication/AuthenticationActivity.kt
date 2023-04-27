@@ -1,25 +1,25 @@
 package com.udacity.project4.authentication
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.NavHostFragment
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.udacity.project4.R
 import com.udacity.project4.databinding.ActivityAuthenticationBinding
-import com.udacity.project4.databinding.FragmentRemindersBinding
+import com.udacity.project4.locationreminders.RemindersActivity
+import kotlinx.android.synthetic.main.activity_reminders.nav_host_fragment
 
 /**
  * This class should be the starting point of the app, It asks the users to sign in / register, and redirects the
  * signed in users to the RemindersActivity.
  */
+
 class AuthenticationActivity : AppCompatActivity() {
     companion object {
         const val TAG = "AuthenticationActivity"
@@ -27,16 +27,21 @@ class AuthenticationActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityAuthenticationBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication)
         binding.authButton.setOnClickListener {
             launchSignInFlow()
         }
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == SIGN_IN_RESULT_CODE) {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
@@ -44,8 +49,13 @@ class AuthenticationActivity : AppCompatActivity() {
                 Log.i(
                     TAG,
                     "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.displayName}!"
-                    //          TODO: If the user was authenticated, send him to RemindersActivity
                 )
+
+                //TODO: If the user was authenticated, send him to RemindersActivity
+                val intent = Intent(this, RemindersActivity::class.java)
+                startActivity(intent)
+                finish()
+
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
@@ -62,8 +72,8 @@ class AuthenticationActivity : AppCompatActivity() {
         // If users choose to register with their email,
         // they will need to create a password as well
         val providers = arrayListOf(
-            AuthUI.IdpConfig.EmailBuilder().build()
-            //
+            AuthUI.IdpConfig.EmailBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build()
         )
 
         // Create and launch sign-in intent.
