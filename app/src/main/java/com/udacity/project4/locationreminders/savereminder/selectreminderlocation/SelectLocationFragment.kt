@@ -29,11 +29,12 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 
-class SelectLocationFragment : BaseFragment() {
+class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     //Use Koin to get the view model of the SaveReminder
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSelectLocationBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -48,6 +49,10 @@ class SelectLocationFragment : BaseFragment() {
         setDisplayHomeAsUpEnabled(true)
 
 //        TODO: add the map setup implementation
+        val mapFragment = childFragmentManager.findFragmentById(R.id.mapko) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
+
+
 //        TODO: zoom to the user location after taking his permission
 //        TODO: add style to the map
 //        TODO: put a marker to location that the user selected
@@ -75,16 +80,35 @@ class SelectLocationFragment : BaseFragment() {
         R.id.normal_map -> {
             true
         }
+
         R.id.hybrid_map -> {
             true
         }
+
         R.id.satellite_map -> {
             true
         }
+
         R.id.terrain_map -> {
             true
         }
+
         else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        /**
+         * Manipulates the map once available.
+         * This callback is triggered when the map is ready to be used.
+         * This is where we can add markers or lines, add listeners or move the camera.
+         * In this case, we just add a marker near Sydney, Australia.
+         * If Google Play services is not installed on the device, the user will be prompted to
+         * install it inside the SupportMapFragment. This method will only be triggered once the
+         * user has installed Google Play services and returned to the app.
+         */
+        val sydney = LatLng(-34.0, 151.0)
+        googleMap?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
 
