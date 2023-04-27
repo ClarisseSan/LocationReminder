@@ -60,6 +60,15 @@ class ReminderListFragment : BaseFragment() {
         )
     }
 
+    private fun navigateToAuthentication() {
+        //use the navigationCommand live data to navigate between the fragments
+        _viewModel.navigationCommand.postValue(
+            NavigationCommand.To(
+                ReminderListFragmentDirections.toAuthentication()
+            )
+        )
+    }
+
     private fun setupRecyclerView() {
         val adapter = RemindersListAdapter {
 
@@ -73,6 +82,7 @@ class ReminderListFragment : BaseFragment() {
         when (item.itemId) {
             R.id.logout -> {
 //                TODO: add the logout implementation
+                navigateToAuthentication()
             }
         }
         return super.onOptionsItemSelected(item)
