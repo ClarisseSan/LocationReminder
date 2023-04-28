@@ -190,7 +190,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         //        TODO: When the user confirms on the selected location,
         //         send back the selected location details to the view model
         //         and navigate back to the previous fragment to save the reminder and add the geofence
-        if (marker.position != null && marker.title != null) {
+        if (this::marker.isInitialized && marker.position != null && marker.title != null) {
             _viewModel.latitude.value = marker.position.latitude
             _viewModel.longitude.value = marker.position.longitude
             _viewModel.reminderSelectedLocationStr.value = marker.title
