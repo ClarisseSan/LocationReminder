@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -155,11 +156,10 @@ class SaveReminderFragment : BaseFragment() {
 
             else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
         }
-        Log.d(TAG, "Request foreground only location permission")
+        Log.d(TAG, "Request foreground only location permission ${resultCode.toString()}")
 
-        //Request permissions passing in the current activity, the permissions array and the result code.
-        ActivityCompat.requestPermissions(
-            activity!!,
+        //Request permissions passing in the permissions array and the result code.
+        requestPermissions(
             permissionsArray,
             resultCode
         )
@@ -187,7 +187,7 @@ class SaveReminderFragment : BaseFragment() {
             //This app has very little use when permissions are not granted so present a snackbar
             // explaining that the user needs location permissions in order to play.
             Snackbar.make(
-                binding.saveReminder,
+                binding.fragmentSaveReminder,
                 R.string.permission_denied_explanation,
                 Snackbar.LENGTH_INDEFINITE
             )
@@ -238,7 +238,7 @@ class SaveReminderFragment : BaseFragment() {
                 //If the exception is not of type ResolvableApiException,
                 // present a snackbar that alerts the user that location needs to be enabled to play the treasure hunt.
                 Snackbar.make(
-                    binding.saveReminder,
+                    binding.fragmentSaveReminder,
                     R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
                 ).setAction(android.R.string.ok) {
                     checkDeviceLocationSettingsAndStartGeofence()
