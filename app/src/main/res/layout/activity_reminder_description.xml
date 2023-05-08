@@ -15,6 +15,10 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:context=".locationreminders.ReminderDescriptionActivity">
         <!--TODO: add the design of the reminder details-->
 
@@ -23,11 +27,31 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Reminder Details"
+            android:textSize="@dimen/text_size_large" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{reminderDataItem.title}"
             android:textSize="@dimen/text_size_large"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:text="Title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{reminderDataItem.description}"
+            android:textSize="@dimen/text_size_large"
+            tools:text="Description" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{reminderDataItem.location}"
+            android:textSize="@dimen/text_size_large"
+            tools:text="Location" />
 
     </LinearLayout>
 </layout>
