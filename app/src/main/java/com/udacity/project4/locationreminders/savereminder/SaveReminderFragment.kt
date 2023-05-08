@@ -16,8 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.app.PendingIntent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.common.api.ResolvableApiException
@@ -113,10 +111,7 @@ class SaveReminderFragment : BaseFragment() {
             val latitude = _viewModel.latitude.value
             val longitude = _viewModel.longitude.value
 
-//            TODO: use the user entered reminder details to:
-//             2) save the reminder to the local db
             reminderDataItem = ReminderDataItem(title, description, location, latitude, longitude)
-
 
             if (_viewModel.validateEnteredData(reminderDataItem)) {
                 checkPermissionsAndStartGeofencing()
@@ -180,7 +175,7 @@ class SaveReminderFragment : BaseFragment() {
 
             else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
         }
-        Log.d(TAG, "Request foreground only location permission ${resultCode.toString()}")
+        Log.d(TAG, "Request foreground only location permission $resultCode")
 
         //Request permissions passing in the permissions array and the result code.
         requestPermissions(
