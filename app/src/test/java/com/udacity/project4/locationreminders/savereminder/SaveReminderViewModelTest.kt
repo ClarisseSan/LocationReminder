@@ -20,22 +20,22 @@ class SaveReminderViewModelTest {
 
     //TODO: provide testing to the SaveReminderView and its live data objects
 
-//    // Subject under test
-//    private lateinit var viewModel: SaveReminderViewModel
-//
-//    // Executes each task synchronously using Architecture Components.
-//    @get:Rule
-//    var instantExecutorRule = InstantTaskExecutorRule()
-//
-//    private lateinit var remindersRepository: FakeDataSource
-//
-//
-//    @Before
-//    fun setupViewModel() {
-//        remindersRepository = FakeDataSource()
-//        viewModel =
-//            SaveReminderViewModel(ApplicationProvider.getApplicationContext(), remindersRepository)
-//    }
+    // Subject under test
+    private lateinit var viewModel: SaveReminderViewModel
+
+    // Executes each task synchronously using Architecture Components.
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var remindersRepository: FakeDataSource
+
+
+    @Before
+    fun setupViewModel() {
+        remindersRepository = FakeDataSource()
+        viewModel =
+            SaveReminderViewModel(ApplicationProvider.getApplicationContext(), remindersRepository)
+    }
 
     @Test
     fun saveReminder_setsNewReminder() {
@@ -49,6 +49,8 @@ class SaveReminderViewModelTest {
         //Then new Reminder event is triggered
 
     }
+
+
 
 
 }
