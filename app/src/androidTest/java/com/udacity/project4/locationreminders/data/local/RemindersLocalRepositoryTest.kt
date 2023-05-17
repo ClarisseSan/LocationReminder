@@ -24,8 +24,7 @@ import org.hamcrest.Matchers.notNullValue
 //Medium Test to test the repository
 @MediumTest
 class RemindersLocalRepositoryTest {
-    //TODO: Add testing implementation to the RemindersLocalRepository.kt
-
+    //Add testing implementation to the RemindersLocalRepository.kt
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
@@ -35,19 +34,22 @@ class RemindersLocalRepositoryTest {
     private lateinit var database: RemindersDatabase
 
     @Before
-    fun setup(){
+    fun setupDbAndRepository() {
 
         //in memory database
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
-            RemindersDatabase::class.java).allowMainThreadQueries().build()
+            RemindersDatabase::class.java
+        ).allowMainThreadQueries().build()
 
-
-        remindersLocalRepository = RemindersLocalRepository(database.reminderDao(), Dispatchers.Main)
+        // Get a reference to the class under test
+        remindersLocalRepository =
+            RemindersLocalRepository(database.reminderDao(), Dispatchers.Main)
     }
 
     @After
-    fun finish(){
+    fun finish() {
+        //always close database
         database.close()
     }
 
@@ -64,10 +66,7 @@ class RemindersLocalRepositoryTest {
 
         //when
         remindersLocalRepository.saveReminder(reminder1)
-
-
-        val result = remindersLocalRepository.getReminder(reminder1.id)
-        result as Result.Success
+        val result = remindersLocalRepository.getReminder(reminder1.id) as Result.Success
 
         //then
         assertThat(result, `is`(notNullValue()))
@@ -76,6 +75,55 @@ class RemindersLocalRepositoryTest {
         assertThat(result.data.latitude, `is`(reminder1.latitude))
         assertThat(result.data.longitude, `is`(reminder1.longitude))
         assertThat(result.data.location, `is`(reminder1.location))
+    }
+
+    @Test
+    fun deleteAllReminders_emptyList() = runBlocking {
+        //given
+        val reminder1 = ReminderDTO(
+            "Grocery",
+            "Buy apples and bananas",
+            "Savemore Festival mall",
+            14.417399772472931,
+            121.03937432329282
+        )
+
+        //when
+        remindersLocalRepository.saveReminder(reminder1)
+        remindersLocalRepository.deleteAllReminders()
+        val result = remindersLocalRepository.getReminders() as Result.Success
+
+        //then
+        assertThat(result.data, `is`(emptyList()))
+    }
+
+    @Test
+    fun getReminders_listNotNull() = runBlocking {
+        //given
+        val reminder1 = ReminderDTO(
+            "Grocery",
+            "Buy apples and bananas",
+            "Savemore Festival mall",
+            14.417399772472931,
+            121.03937432329282
+        )
+
+        val reminder2 = ReminderDTO(
+            "Books",
+            "Buy manga books",
+            "Fully Book Alabang",
+            14.42221728701816,
+            121.03025441349394
+        )
+
+        //when
+        remindersLocalRepository.saveReminder(reminder1)
+        remindersLocalRepository.saveReminder(reminder2)
+        val result = remindersLocalRepository.getReminders() as Result.Success
+
+        //then
+        assertThat(result.data, `is`(notNullValue()))
+
     }
 
 
