@@ -10,8 +10,9 @@ class FakeDataSource(var reminders: MutableList<ReminderDTO>? = mutableListOf())
 
     //Create a fake data source to act as a double to the real data source
 
+
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
-        reminders?.let { Result.Success(ArrayList(it)) }
+        reminders?.let { return Result.Success(ArrayList(it)) }
         return Result.Error("Reminders not found")
     }
 
