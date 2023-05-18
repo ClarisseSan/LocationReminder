@@ -7,17 +7,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.getOrAwaitValue
-import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.not
 import org.hamcrest.core.IsNull.notNullValue
 import org.junit.After
-import org.junit.Assert
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -37,13 +32,13 @@ class RemindersListViewModelTest {
     // Subject under test
     private lateinit var viewModel: RemindersListViewModel
 
-    private lateinit var remindersRepository: FakeDataSource
+    private lateinit var fakeDataSource: FakeDataSource
 
     @Before
     fun setupViewModel() = runBlocking {
-        remindersRepository = FakeDataSource()
+        fakeDataSource = FakeDataSource()
         viewModel =
-            RemindersListViewModel(ApplicationProvider.getApplicationContext(), remindersRepository)
+            RemindersListViewModel(ApplicationProvider.getApplicationContext(), fakeDataSource)
     }
 
     @After
@@ -74,7 +69,7 @@ class RemindersListViewModelTest {
             121.03937432329282
         )
 
-        remindersRepository.saveReminder(reminder1)
+        fakeDataSource.saveReminder(reminder1)
 
         //when
         viewModel.loadReminders()
