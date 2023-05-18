@@ -1,20 +1,91 @@
 package com.udacity.project4.locationreminders.reminderslist
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.udacity.project4.locationreminders.data.FakeDataSource
+import com.udacity.project4.locationreminders.data.dto.ReminderDTO
+import com.udacity.project4.locationreminders.getOrAwaitValue
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import org.hamcrest.CoreMatchers.nullValue
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.not
+import org.hamcrest.core.IsNull.notNullValue
+import org.junit.After
+import org.junit.Assert
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
-@RunWith(AndroidJUnit4::class)
+import org.koin.core.context.stopKoin
 @ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
 class RemindersListViewModelTest {
 
-    //TODO: provide testing to the RemindersListViewModel and its live data objects
+    //provide testing to the RemindersListViewModel and its live data objects
+
+    // Executes each task synchronously using Architecture Components.
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
+
+    // Subject under test
+    private lateinit var viewModel: RemindersListViewModel
+
+    private lateinit var remindersRepository: FakeDataSource
+
+    @Before
+    fun setupViewModel() = runBlocking {
+        remindersRepository = FakeDataSource()
+        viewModel =
+            RemindersListViewModel(ApplicationProvider.getApplicationContext(), remindersRepository)
+    }
+
+    @After
+    fun finish() {
+        //Stop Koin Application that was started
+        stopKoin()
+    }
 
     @Test
-    fun add(){
-        TestCase.assertEquals(4, 2 + 2)
+    fun invalidateShowNoData_emptyList_showNoData(){
+        //given
+        val remindersList = MutableLiveData<List<ReminderDataItem>>()
+
+        //when
+        viewModel.showNoData.value = remindersList.value == null || remindersList.value!!.isEmpty()
+
+        //then
+        assertTrue(viewModel.showNoData.getOrAwaitValue())
     }
+    @Test
+    fun loadReminders_notEmptyList() = runBlocking {
+        //given
+        val reminder1 = ReminderDTO(
+            "Grocery",
+            "Buy apples and bananas",
+            "Savemore Alabang",
+            14.417399772472931,
+            121.03937432329282
+        )
+
+        remindersRepository.saveReminder(reminder1)
+
+        //when
+        viewModel.loadReminders()
+
+        val result = viewModel.remindersList.getOrAwaitValue()
+
+        //then
+        assertThat(result, `is`(notNullValue()))
+    }
+
+
+
 
 }
