@@ -91,6 +91,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
     testImplementation "com.google.truth:truth:$truthVersion"
+    testImplementation 'androidx.test.ext:truth:1.5.0'
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
 
 
