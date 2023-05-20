@@ -135,3 +135,12 @@ dependencies {
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
+// Reference: https://docs.gradle.org/current/userguide/toolchains.html
+// Why: So that we don't have to rely on the locally installed Java version.
+// Instead, Gradle will use the specified Java version across all tasks.
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
