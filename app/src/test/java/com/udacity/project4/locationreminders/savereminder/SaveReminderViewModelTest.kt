@@ -33,14 +33,14 @@ class SaveReminderViewModelTest {
     // Subject under test
     private lateinit var viewModel: SaveReminderViewModel
 
-    private lateinit var remindersRepository: FakeDataSource
+    private lateinit var fakeDataSource: FakeDataSource
 
 
     @Before
     fun setupViewModel() = runBlocking {
-        remindersRepository = FakeDataSource()
+        fakeDataSource = FakeDataSource()
         viewModel =
-            SaveReminderViewModel(ApplicationProvider.getApplicationContext(), remindersRepository)
+            SaveReminderViewModel(ApplicationProvider.getApplicationContext(), fakeDataSource)
     }
 
     @After
