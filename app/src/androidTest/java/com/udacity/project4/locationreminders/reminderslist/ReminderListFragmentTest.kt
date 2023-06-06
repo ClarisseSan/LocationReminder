@@ -51,10 +51,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
 
-    //    TODO: test the navigation of the fragments.
-
-    //    TODO: add testing for the error messages.
-
     //Use Koin to test code
     @Before
     fun init() {
@@ -94,7 +90,7 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
     }
 
 
-    //    TODO: test the displayed data on the UI.
+    //TODO: test the displayed data on the UI.
     @Test
     fun reminders_DisplayedInUI(): Unit = runBlocking {
 
@@ -129,6 +125,39 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
                     hasDescendant(withText(reminder.title))
                 )
             )
+            .perform(
+                RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                    hasDescendant(withText(reminder.description))
+                )
+            )
+            .perform(
+                RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                    hasDescendant(withText(reminder.location))
+                )
+            )
+    }
+
+
+    //TODO: test the navigation of the fragments.
+    @Test
+    fun clickFab_navigateToSaveReminderFragment(){
+        //Given
+        val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
+        Thread.sleep(2000)
+
+        //Use Mockito's mock function to create a mock
+        val navController = mock(NavController::class.java)
+
+        //Make your new mock the fragment's NavController
+        scenario.onFragment { Navigation.setViewNavController(it.view!!, navController) }
+
+
+        //when fab is clicked
+        onView(withId(R.id.addReminderFAB)).perform(click())
+
+
+        //then navigate to saveReminder
+        verify(navController).navigate(ReminderListFragmentDirections.toSaveReminder())
     }
 
 
