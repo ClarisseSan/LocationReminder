@@ -36,6 +36,11 @@ class AuthenticationActivity : AppCompatActivity() {
             launchSignInFlow()
         }
 
+        //If the user was authenticated, send him to RemindersActivity
+        if (FirebaseAuth.getInstance().currentUser != null) {
+            val intent = Intent(this, RemindersActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 
