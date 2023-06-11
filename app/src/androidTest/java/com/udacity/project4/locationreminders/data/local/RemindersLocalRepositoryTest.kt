@@ -126,5 +126,46 @@ class RemindersLocalRepositoryTest {
 
     }
 
+    @Test
+    fun getReminderById_dataFound() = runBlocking{
+        //given
+        val reminder1 = ReminderDTO(
+            "Grocery",
+            "Buy apples and bananas",
+            "Savemore Festival mall",
+            14.417399772472931,
+            121.03937432329282
+        )
+
+        //when
+        remindersLocalRepository.saveReminder(reminder1)
+        val result = remindersLocalRepository.getReminder(reminder1.id) as Result.Success
+
+        //then
+        assertThat(result.data, `is`(notNullValue()))
+
+    }
+
+
+    @Test
+    fun getReminderById_dataNotFound() = runBlocking{
+        //given
+        val reminder1 = ReminderDTO(
+            "Grocery",
+            "Buy apples and bananas",
+            "Savemore Festival mall",
+            14.417399772472931,
+            121.03937432329282
+        )
+
+        //when
+        remindersLocalRepository.deleteAllReminders()
+        val result = remindersLocalRepository.getReminder(reminder1.id) as Result.Error
+
+        //then
+        assertThat(result.message, `is`("Reminder not found!"))
+
+    }
+
 
 }
