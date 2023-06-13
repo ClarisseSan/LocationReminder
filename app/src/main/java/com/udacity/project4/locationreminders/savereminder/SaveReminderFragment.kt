@@ -81,7 +81,7 @@ class SaveReminderFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        checkPermissions()
+        //checkPermissions()
     }
 
     /**
@@ -108,6 +108,9 @@ class SaveReminderFragment : BaseFragment() {
 
 
         binding.saveReminder.setOnClickListener {
+            //check permissions when save button is clicked
+            checkPermissions()
+
             val title = _viewModel.reminderTitle.value
             val description = _viewModel.reminderDescription.value
             val location = _viewModel.reminderSelectedLocationStr.value
@@ -321,11 +324,12 @@ class SaveReminderFragment : BaseFragment() {
                             _viewModel.validateAndSaveReminder(reminderDataItem)
 
                             // Geofences added.
-                            Toast.makeText(
-                                context, R.string.geofences_added,
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                            Snackbar.make(
+                                binding.fragmentSaveReminder,
+                                R.string.geofences_added,
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+
                             Log.e("Add Geofence", geofence.requestId)
                         }
                         addOnFailureListener {

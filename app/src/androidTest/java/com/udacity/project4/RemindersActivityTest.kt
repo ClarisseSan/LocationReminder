@@ -1,6 +1,7 @@
 package com.udacity.project4
 
 import android.app.Application
+import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.closeSoftKeyboard
@@ -16,8 +17,10 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
 import com.google.android.material.internal.ContextUtils.getActivity
 import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
@@ -31,6 +34,7 @@ import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -210,8 +214,6 @@ class RemindersActivityTest :
         onView(withId(R.id.saveReminder)).perform(click())
 
         //check if toasts are displayed
-        onView(withText(R.string.geofences_added)).inRoot(withDecorView(not(getActivity(appContext)?.window?.decorView)))
-            .check(matches(isDisplayed()))
         onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(getActivity(appContext)?.window?.decorView)))
             .check(matches(isDisplayed()))
 
