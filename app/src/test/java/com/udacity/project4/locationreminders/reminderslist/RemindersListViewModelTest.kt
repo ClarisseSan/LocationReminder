@@ -36,7 +36,7 @@ class RemindersListViewModelTest {
     private lateinit var fakeDataSource: FakeDataSource
 
     @Before
-    fun setupViewModel() = runBlocking {
+    fun setupViewModel() {
         fakeDataSource = FakeDataSource()
         viewModel =
             RemindersListViewModel(ApplicationProvider.getApplicationContext(), fakeDataSource)
