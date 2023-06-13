@@ -19,6 +19,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
+
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class RemindersListViewModelTest {
@@ -48,7 +49,7 @@ class RemindersListViewModelTest {
     }
 
     @Test
-    fun invalidateShowNoData_emptyList_showNoData(){
+    fun invalidateShowNoData_emptyList_showNoData() {
         //given
         val remindersList = MutableLiveData<List<ReminderDataItem>>()
 
@@ -58,6 +59,7 @@ class RemindersListViewModelTest {
         //then
         assertTrue(viewModel.showNoData.getOrAwaitValue())
     }
+
     @Test
     fun loadReminders_notEmptyList() = runBlocking {
         //given
@@ -80,7 +82,32 @@ class RemindersListViewModelTest {
         assertThat(result, `is`(notNullValue()))
     }
 
+    @Test
+    fun loadReminders_showError() = runBlocking {
+        //given
+        val reminder1 = ReminderDTO(
+            "Grocery",
+            "Buy apples and bananas",
+            "Savemore Alabang",
+            14.417399772472931,
+            121.03937432329282
+        )
 
+        fakeDataSource.saveReminder(reminder1)
+
+        //make repository to return error
+        fakeDataSource.setReturnError(true)
+
+        //when
+        viewModel.loadReminders()
+
+        val result = viewModel.showSnackBar.getOrAwaitValue()
+
+        //then
+        assertThat(result, `is`("Reminders Error"))
+
+
+    }
 
 
 }
