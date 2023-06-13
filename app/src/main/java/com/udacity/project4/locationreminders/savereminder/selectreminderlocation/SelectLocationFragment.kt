@@ -182,7 +182,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     private fun showDialog() {
         val builder = AlertDialog.Builder(context)
-        builder.setMessage("Select a location or POI on the map and add a new marker at that location")
+        builder.setMessage(R.string.select_loc_poi)
 
         builder.setPositiveButton(android.R.string.ok) { dialog, which ->
         }

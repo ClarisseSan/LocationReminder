@@ -6,15 +6,19 @@ import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.isDialog
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.google.android.material.internal.ContextUtils.getActivity
 import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.local.LocalDB
@@ -24,6 +28,7 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -115,7 +120,7 @@ class RemindersActivityTest :
         //espresso code will go here
 
         //click Add reminder Fab
-        onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
+        onView(withId(R.id.addReminderFAB)).perform(click())
 
         //check add reminder form
         onView(withId(R.id.reminderTitle)).check(matches(withHint(appContext.getString(R.string.reminder_title))))
@@ -123,7 +128,7 @@ class RemindersActivityTest :
         onView(withId(R.id.selectLocation)).check(matches(withText(appContext.getString(R.string.reminder_location))))
 
         //save Reminder
-        onView(withId(R.id.saveReminder)).perform(ViewActions.click())
+        onView(withId(R.id.saveReminder)).perform(click())
 
         //show Snackbar error
         val snackBarMessage = appContext.getString(R.string.err_enter_title)
@@ -143,7 +148,7 @@ class RemindersActivityTest :
         //espresso code will go here
 
         //click Add reminder Fab
-        onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
+        onView(withId(R.id.addReminderFAB)).perform(click())
 
         //check add reminder form
         onView(withId(R.id.reminderTitle)).check(matches(withHint(appContext.getString(R.string.reminder_title))))
@@ -157,7 +162,7 @@ class RemindersActivityTest :
         closeSoftKeyboard()
 
         //save Reminder
-        onView(withId(R.id.saveReminder)).perform(ViewActions.click())
+        onView(withId(R.id.saveReminder)).perform(click())
 
         //show Snackbar error
         val snackBarMessage = appContext.getString(R.string.err_select_location)
@@ -167,5 +172,51 @@ class RemindersActivityTest :
         activityScenario.close()
 
     }
+
+
+    @Test
+    fun saveTest_showToast() {
+        //start screen
+        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        //espresso code will go here
+        //click Add reminder Fab
+        onView(withId(R.id.addReminderFAB)).perform(click())
+
+        //check add reminder form
+        onView(withId(R.id.reminderTitle)).check(matches(withHint(appContext.getString(R.string.reminder_title))))
+        onView(withId(R.id.reminderDescription)).check(matches(withHint(appContext.getString(R.string.reminder_desc))))
+        onView(withId(R.id.selectLocation)).check(matches(withText(appContext.getString(R.string.reminder_location))))
+
+
+        //type reminder title and description
+        onView(withId(R.id.reminderTitle)).perform(typeText("New York"))
+        onView(withId(R.id.reminderDescription)).perform(typeText("Buy Ipad"))
+        closeSoftKeyboard()
+
+        //click select location
+        onView(withId(R.id.selectLocation)).perform(click())
+
+        //click dialog
+        onView(withText(R.string.select_loc_poi)).inRoot(isDialog()).check(matches(isDisplayed()))
+        onView(withText(android.R.string.ok)).inRoot(isDialog()).perform(click())
+
+        //click on map and save
+        onView(withId(R.id.mapko)).perform(longClick())
+        onView(withId(R.id.btn_save)).perform(click())
+
+        //save Reminder
+        onView(withId(R.id.saveReminder)).perform(click())
+
+        //check if toasts are displayed
+        onView(withText(R.string.geofences_added)).inRoot(withDecorView(not(getActivity(appContext)?.window?.decorView)))
+            .check(matches(isDisplayed()))
+        onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(getActivity(appContext)?.window?.decorView)))
+            .check(matches(isDisplayed()))
+
+        activityScenario.close()
+    }
+
 
 }

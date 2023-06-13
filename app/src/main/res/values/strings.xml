@@ -42,4 +42,5 @@
     <string name="error_adding_geofence">Error Happened, Can\'t Add Geofence</string>
     <string name="unknown_geofence_error">Unknown Geofence error</string>
     <string name="geofences_added">Geofences added</string>
+    <string name="select_loc_poi">Select a location or POI on the map and add a new marker at that location</string>
 </resources>
